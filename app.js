@@ -2,6 +2,7 @@
  * Book Tracker — app.js
  *
  * Stage 2: Add books + display (newest first) + validation
+ * Stage 3: localStorage persistence
  *
  * Architecture:
  *  - books[]  : in-memory array, source of truth
@@ -23,6 +24,48 @@ const el = {
   emptyState:  document.getElementById('empty-state'),
   bookCount:   document.getElementById('book-count'),
 };
+
+/* ── Storage ──────────────────────────────────────────────── */
+const STORAGE_KEY = 'booktracker_books';
+
+/**
+ * Persist the current books[] array to localStorage.
+ */
+function saveBooks() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(books));
+  } catch (err) {
+    // localStorage may be unavailable (private mode quota, etc.)
+    console.warn('Book Tracker: could not save to localStorage.', err);
+  }
+}
+
+/**
+ * Load books from localStorage into books[].
+ * If data is missing or malformed, books[] stays empty.
+ */
+function loadBooks() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return; // nothing saved yet
+    const parsed = JSON.parse(raw);
+    // Validate: must be an array of objects with required fields
+    if (!Array.isArray(parsed)) return;
+    books = parsed.filter(
+      (b) =>
+        b &&
+        typeof b.id      === 'string' &&
+        typeof b.title   === 'string' &&
+        typeof b.author  === 'string' &&
+        typeof b.status  === 'string' &&
+        typeof b.addedAt === 'number'
+    );
+  } catch (err) {
+    // Corrupt JSON — start fresh
+    console.warn('Book Tracker: saved data was unreadable. Starting fresh.', err);
+    books = [];
+  }
+}
 
 /* ── State ─────────────────────────────────────────────────── */
 let books = []; // Array of { id, title, author, status, addedAt }
@@ -181,6 +224,7 @@ function handleAddBook(event) {
   };
 
   books.push(newBook);
+  saveBooks();
   render();
 
   // Reset form — status returns to default 'to-read'
@@ -210,4 +254,5 @@ el.authorInput.addEventListener('input', () => {
 el.form.addEventListener('submit', handleAddBook);
 
 /* ── Initialise ────────────────────────────────────────────── */
-render(); // Show empty state on first load
+loadBooks(); // Restore saved books before first render
+render();
