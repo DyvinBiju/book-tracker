@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Book Tracker — keep a personal list of books you want to read, are reading, or have finished."
+    />
+    <title>Book Tracker</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="page-wrapper">
+
+      <!-- ── Header ─────────────────────────────────────────── -->
+      <header class="site-header">
+        <div class="header-inner">
+          <span class="header-icon" aria-hidden="true">📚</span>
+          <div>
+            <h1 class="site-title">Book Tracker</h1>
+            <p class="site-tagline">Your personal reading list</p>
+          </div>
+        </div>
+      </header>
+
+      <main class="main-content">
+
+        <!-- ── Add Book Form ───────────────────────────────── -->
+        <section class="card form-card" aria-labelledby="form-heading">
+          <h2 id="form-heading" class="card-title">Add a Book</h2>
+
+          <form id="add-book-form" novalidate>
+
+            <!-- Title field -->
+            <div class="form-group">
+              <label class="form-label" for="book-title">
+                Title <span class="required-star" aria-hidden="true">*</span>
+              </label>
+              <input
+                type="text"
+                id="book-title"
+                name="book-title"
+                class="form-input"
+                placeholder="e.g. The Alchemist"
+                autocomplete="off"
+                aria-required="true"
+                aria-describedby="title-error"
+              />
+              <span
+                id="title-error"
+                class="field-error"
+                role="alert"
+                aria-live="polite"
+              ></span>
+            </div>
+
+            <!-- Author field -->
+            <div class="form-group">
+              <label class="form-label" for="book-author">
+                Author <span class="required-star" aria-hidden="true">*</span>
+              </label>
+              <input
+                type="text"
+                id="book-author"
+                name="book-author"
+                class="form-input"
+                placeholder="e.g. Paulo Coelho"
+                autocomplete="off"
+                aria-required="true"
+                aria-describedby="author-error"
+              />
+              <span
+                id="author-error"
+                class="field-error"
+                role="alert"
+                aria-live="polite"
+              ></span>
+            </div>
+
+            <!-- Status field -->
+            <div class="form-group">
+              <label class="form-label" for="book-status">Status</label>
+              <select id="book-status" name="book-status" class="form-select">
+                <option value="to-read" selected>To Read</option>
+                <option value="reading">Reading</option>
+                <option value="finished">Finished</option>
+              </select>
+            </div>
+
+            <button type="submit" id="add-book-btn" class="btn btn-primary">
+              Add Book
+            </button>
+
+          </form>
+        </section>
+
+        <!-- ── Book List Section ───────────────────────────── -->
+        <section class="card list-card" aria-labelledby="list-heading">
+          <div class="list-header">
+            <h2 id="list-heading" class="card-title">My Books</h2>
+            <span id="book-count" class="book-count-badge" aria-live="polite"></span>
+          </div>
+
+          <!-- Search (wired up in Stage 4 — input present for layout now) -->
+          <div class="search-wrapper" id="search-wrapper" hidden>
+            <label class="sr-only" for="search-input">Search books</label>
+            <input
+              type="search"
+              id="search-input"
+              class="form-input search-input"
+              placeholder="Search by title or author…"
+              autocomplete="off"
+              aria-label="Search books by title or author"
+            />
+            <span class="search-icon" aria-hidden="true">🔍</span>
+          </div>
+
+          <!-- Book list -->
+          <ul id="book-list" class="book-list" aria-label="Book list" aria-live="polite">
+            <!-- Populated by app.js -->
+          </ul>
+
+          <!-- Empty state -->
+          <div id="empty-state" class="empty-state" hidden>
+            <span class="empty-icon" aria-hidden="true">📖</span>
+            <p class="empty-title">No books yet</p>
+            <p class="empty-subtitle">Add your first book using the form above.</p>
+          </div>
+
+        </section>
+
+      </main>
+
+      <footer class="site-footer">
+        <p>Book Tracker &mdash; Globocon Internship 2026</p>
+      </footer>
+
+    </div><!-- /.page-wrapper -->
+
+    <script src="app.js"></script>
+  </body>
+</html>
