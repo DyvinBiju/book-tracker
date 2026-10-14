@@ -1,0 +1,41 @@
+# ── Operating System ──────────────────────────────────────
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Linux
+*~
+
+# ── Editors and IDEs ──────────────────────────────────────
+# VS Code
+.vscode/
+
+# JetBrains (WebStorm, IntelliJ, etc.)
+.idea/
+*.iml
+
+# Vim / Neovim
+*.swp
+*.swo
+*.swn
+
+# Emacs
+\#*\#
+.\#*
+
+# ── Logs and temporaries ──────────────────────────────────
+*.log
+*.tmp
+*.temp
+
+# ── No build tools used — nothing else to exclude ─────────
