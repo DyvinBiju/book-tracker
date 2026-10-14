@@ -103,7 +103,7 @@
           </div>
 
           <!-- Search (wired up in Stage 4 — input present for layout now) -->
-          <div class="search-wrapper" id="search-wrapper" hidden>
+          <div class="search-wrapper" id="search-wrapper">
             <label class="sr-only" for="search-input">Search books</label>
             <input
               type="search"
@@ -120,6 +120,13 @@
           <ul id="book-list" class="book-list" aria-label="Book list" aria-live="polite">
             <!-- Populated by app.js -->
           </ul>
+
+          <!-- No-results state (search returned nothing) -->
+          <div id="no-results" class="empty-state" hidden>
+            <span class="empty-icon" aria-hidden="true">🔍</span>
+            <p class="empty-title">No books match your search</p>
+            <p class="empty-subtitle">Try a different title or author, or clear the search field.</p>
+          </div>
 
           <!-- Empty state -->
           <div id="empty-state" class="empty-state" hidden>

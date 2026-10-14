@@ -3,6 +3,7 @@
  *
  * Stage 2: Add books + display (newest first) + validation
  * Stage 3: localStorage persistence
+ * Stage 4: Case-insensitive partial-match search
  *
  * Architecture:
  *  - books[]  : in-memory array, source of truth
@@ -22,7 +23,9 @@ const el = {
   authorError: document.getElementById('author-error'),
   bookList:    document.getElementById('book-list'),
   emptyState:  document.getElementById('empty-state'),
+  noResults:   document.getElementById('no-results'),
   bookCount:   document.getElementById('book-count'),
+  searchInput: document.getElementById('search-input'),
 };
 
 /* ── Storage ──────────────────────────────────────────────── */
@@ -68,7 +71,8 @@ function loadBooks() {
 }
 
 /* ── State ─────────────────────────────────────────────────── */
-let books = []; // Array of { id, title, author, status, addedAt }
+let books = [];       // Array of { id, title, author, status, addedAt }
+let searchQuery = ''; // Current search string (lowercase)
 
 /* ── Utilities ─────────────────────────────────────────────── */
 
@@ -141,6 +145,26 @@ function validateForm() {
   return { valid, title, author, status };
 }
 
+/* ── Search ───────────────────────────────────────────────── */
+
+/**
+ * Return the subset of books[] that match the current searchQuery.
+ * Matches title OR author, case-insensitive, partial string.
+ * Returns all books when searchQuery is empty.
+ * Never modifies books[].
+ * @returns {Array}
+ */
+function getFilteredBooks() {
+  if (!searchQuery) return books;
+  return books.filter((b) => {
+    const q = searchQuery; // already lowercase
+    return (
+      b.title.toLowerCase().includes(q) ||
+      b.author.toLowerCase().includes(q)
+    );
+  });
+}
+
 /* ── Rendering ─────────────────────────────────────────────── */
 
 /**
@@ -184,22 +208,36 @@ function escapeHTML(str) {
 }
 
 /**
- * Re-render the book list from the current books[] array.
+ * Re-render the book list.
+ * Uses getFilteredBooks() so search never mutates books[].
  * Newest first (highest addedAt timestamp first).
  */
 function render() {
-  // Sort newest first
-  const sorted = [...books].sort((a, b) => b.addedAt - a.addedAt);
+  const filtered = getFilteredBooks();
+  const sorted   = [...filtered].sort((a, b) => b.addedAt - a.addedAt);
 
-  if (sorted.length === 0) {
-    el.bookList.innerHTML  = '';
-    el.emptyState.hidden   = false;
+  // Always hide no-results first; show selectively below
+  if (el.noResults) el.noResults.hidden = true;
+
+  if (books.length === 0) {
+    // Collection is empty — show empty state
+    el.bookList.innerHTML    = '';
+    el.emptyState.hidden     = false;
     el.bookCount.textContent = '';
+  } else if (sorted.length === 0) {
+    // Books exist but none match the search
+    el.bookList.innerHTML    = '';
+    el.emptyState.hidden     = true;
+    if (el.noResults) el.noResults.hidden = false;
+    el.bookCount.textContent = `0 of ${books.length} book${books.length !== 1 ? 's' : ''}`;
   } else {
-    el.emptyState.hidden   = true;
-    el.bookList.innerHTML  = sorted.map(buildBookHTML).join('');
-    const count = sorted.length;
-    el.bookCount.textContent = `${count} book${count !== 1 ? 's' : ''}`;
+    el.emptyState.hidden     = true;
+    el.bookList.innerHTML    = sorted.map(buildBookHTML).join('');
+    const total = books.length;
+    const shown = sorted.length;
+    el.bookCount.textContent = searchQuery
+      ? `${shown} of ${total} book${total !== 1 ? 's' : ''}`
+      : `${total} book${total !== 1 ? 's' : ''}`;
   }
 }
 
@@ -252,6 +290,12 @@ el.authorInput.addEventListener('input', () => {
 
 /* ── Event Listeners ───────────────────────────────────────── */
 el.form.addEventListener('submit', handleAddBook);
+
+// Search — update query and re-render on every keystroke
+el.searchInput.addEventListener('input', () => {
+  searchQuery = el.searchInput.value.trim().toLowerCase();
+  render();
+});
 
 /* ── Initialise ────────────────────────────────────────────── */
 loadBooks(); // Restore saved books before first render
