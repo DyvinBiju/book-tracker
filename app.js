@@ -198,6 +198,12 @@ function buildBookHTML(book) {
           <option value="reading"  ${book.status === 'reading'  ? 'selected' : ''}>Reading</option>
           <option value="finished" ${book.status === 'finished' ? 'selected' : ''}>Finished</option>
         </select>
+        <button
+          class="btn-delete"
+          aria-label="Delete ${safeTitle}"
+          data-action="delete-book"
+          title="Delete this book"
+        >&times;</button>
       </div>
     </li>
   `;
@@ -298,6 +304,21 @@ el.authorInput.addEventListener('input', () => {
   }
 });
 
+/* ── Delete Book ───────────────────────────────────────────── */
+
+/**
+ * Delete a book by ID after user confirmation.
+ * @param {string} id - book ID
+ * @param {string} title - book title (used in confirmation message)
+ */
+function handleDeleteBook(id, title) {
+  const confirmed = window.confirm(`Delete "${title}"?\nThis cannot be undone.`);
+  if (!confirmed) return;
+  books = books.filter((b) => b.id !== id);
+  saveBooks();
+  render();
+}
+
 /* ── Status Change ─────────────────────────────────────────── */
 
 /**
@@ -329,6 +350,17 @@ el.bookList.addEventListener('change', (event) => {
   const li = select.closest('[data-id]');
   if (!li) return;
   handleStatusChange(li.dataset.id, select.value);
+});
+
+// Delete — delegated click listener
+el.bookList.addEventListener('click', (event) => {
+  const btn = event.target.closest('[data-action="delete-book"]');
+  if (!btn) return;
+  const li = btn.closest('[data-id]');
+  if (!li) return;
+  const book = books.find((b) => b.id === li.dataset.id);
+  if (!book) return;
+  handleDeleteBook(li.dataset.id, book.title);
 });
 
 /* ── Initialise ────────────────────────────────────────────── */
