@@ -530,33 +530,102 @@ select {
 }
 
 /* ── 15. Responsive ───────────────────────────────────────── */
+
+/* Tablet / small desktop */
+@media (max-width: 600px) {
+  .main-content {
+    padding: var(--space-5) var(--space-3);
+    gap: var(--space-4);
+  }
+
+  .stat-divider {
+    margin: 0 var(--space-3);
+  }
+}
+
+/* Mobile */
 @media (max-width: 480px) {
   .main-content {
     padding: var(--space-4) var(--space-3);
     gap: var(--space-4);
   }
 
+  /* Header */
+  .site-title {
+    font-size: var(--font-size-xl);
+  }
+
+  .header-icon {
+    font-size: 1.5rem;
+  }
+
+  /* Cards */
   .card {
     padding: var(--space-4);
     border-radius: var(--radius-lg);
   }
 
-  .site-title {
-    font-size: var(--font-size-xl);
+  /* Stats bar */
+  .stats-bar {
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-lg);
   }
 
+  .stat-count {
+    font-size: var(--font-size-lg);
+  }
+
+  .stat-divider {
+    margin: 0 var(--space-2);
+    height: 2rem;
+  }
+
+  /* Form */
+  .btn {
+    width: 100%;
+    padding: var(--space-4);
+  }
+
+  .form-input,
+  .form-select {
+    font-size: 1rem; /* prevent iOS zoom on focus */
+    min-height: 2.75rem; /* comfortable touch target */
+  }
+
+  /* Search */
+  .search-input {
+    min-height: 2.75rem;
+  }
+
+  /* Book items — stack on narrow screens */
   .book-item {
     flex-direction: column;
     gap: var(--space-3);
+    padding: var(--space-4);
   }
 
   .book-meta {
     align-items: flex-start;
     flex-direction: row;
     flex-wrap: wrap;
+    gap: var(--space-2);
+    width: 100%;
   }
 
-  .btn {
-    width: 100%;
+  /* Make status select and delete button touch-friendly */
+  .status-select {
+    min-height: 2rem;
+    padding: var(--space-1) var(--space-3);
+  }
+
+  .btn-delete {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  /* List header */
+  .list-header {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
