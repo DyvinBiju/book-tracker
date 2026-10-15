@@ -178,7 +178,6 @@ AI assistance was used throughout development and is documented in [PROMPTS.md](
 ## Assessment
 
 Built for the **Globocon Internship 2026** mini-product assessment.  
-Deadline: 10:00 AM IST, 15 October 2026.
 
 ---
 
