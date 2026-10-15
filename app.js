@@ -27,6 +27,11 @@ const el = {
   noResults:   document.getElementById('no-results'),
   bookCount:   document.getElementById('book-count'),
   searchInput: document.getElementById('search-input'),
+  // Stats
+  statsBar:    document.getElementById('stats-bar'),
+  countToRead: document.getElementById('count-to-read'),
+  countReading:document.getElementById('count-reading'),
+  countFinished:document.getElementById('count-finished'),
 };
 
 /* ── Storage ──────────────────────────────────────────────── */
@@ -224,6 +229,21 @@ function escapeHTML(str) {
 }
 
 /**
+ * Update the statistics bar counts from books[].
+ * Shows the bar when there are books; hides it when empty.
+ */
+function updateStats() {
+  const toRead   = books.filter((b) => b.status === 'to-read').length;
+  const reading  = books.filter((b) => b.status === 'reading').length;
+  const finished = books.filter((b) => b.status === 'finished').length;
+
+  el.countToRead.textContent  = toRead;
+  el.countReading.textContent = reading;
+  el.countFinished.textContent = finished;
+  el.statsBar.hidden = books.length === 0;
+}
+
+/**
  * Re-render the book list.
  * Uses getFilteredBooks() so search never mutates books[].
  * Newest first (highest addedAt timestamp first).
@@ -255,6 +275,7 @@ function render() {
       ? `${shown} of ${total} book${total !== 1 ? 's' : ''}`
       : `${total} book${total !== 1 ? 's' : ''}`;
   }
+  updateStats();
 }
 
 /* ── Add Book ──────────────────────────────────────────────── */
