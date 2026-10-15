@@ -4,6 +4,7 @@
  * Stage 2: Add books + display (newest first) + validation
  * Stage 3: localStorage persistence
  * Stage 4: Case-insensitive partial-match search
+ * Stage 5: Change reading status
  *
  * Architecture:
  *  - books[]  : in-memory array, source of truth
@@ -185,9 +186,18 @@ function buildBookHTML(book) {
         <p class="book-author-text">by ${safeAuthor}</p>
       </div>
       <div class="book-meta">
-        <span class="status-badge ${book.status}" aria-label="Status: ${label}">
+        <span class="status-badge ${book.status}" aria-label="Current status: ${label}">
           ${label}
         </span>
+        <select
+          class="status-select"
+          aria-label="Change status for ${safeTitle}"
+          data-action="change-status"
+        >
+          <option value="to-read"  ${book.status === 'to-read'  ? 'selected' : ''}>To Read</option>
+          <option value="reading"  ${book.status === 'reading'  ? 'selected' : ''}>Reading</option>
+          <option value="finished" ${book.status === 'finished' ? 'selected' : ''}>Finished</option>
+        </select>
       </div>
     </li>
   `;
@@ -288,6 +298,21 @@ el.authorInput.addEventListener('input', () => {
   }
 });
 
+/* ── Status Change ─────────────────────────────────────────── */
+
+/**
+ * Update a book's status, persist it, and re-render.
+ * @param {string} id        - book ID from data-id attribute
+ * @param {string} newStatus - new status value from the select
+ */
+function handleStatusChange(id, newStatus) {
+  const book = books.find((b) => b.id === id);
+  if (!book) return;
+  book.status = newStatus;
+  saveBooks();
+  render();
+}
+
 /* ── Event Listeners ───────────────────────────────────────── */
 el.form.addEventListener('submit', handleAddBook);
 
@@ -295,6 +320,15 @@ el.form.addEventListener('submit', handleAddBook);
 el.searchInput.addEventListener('input', () => {
   searchQuery = el.searchInput.value.trim().toLowerCase();
   render();
+});
+
+// Status change — delegated to #book-list so it survives re-renders
+el.bookList.addEventListener('change', (event) => {
+  const select = event.target.closest('[data-action="change-status"]');
+  if (!select) return;
+  const li = select.closest('[data-id]');
+  if (!li) return;
+  handleStatusChange(li.dataset.id, select.value);
 });
 
 /* ── Initialise ────────────────────────────────────────────── */
