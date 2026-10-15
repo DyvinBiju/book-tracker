@@ -394,6 +394,30 @@ select {
   color: var(--color-finished-text);
 }
 
+/* ── 12b. Status Select (per-book dropdown) ───────────────── */
+.status-select {
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  color: var(--color-text-muted);
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 2px var(--space-2);
+  cursor: pointer;
+  outline: none;
+  transition: border-color var(--transition);
+}
+
+.status-select:hover {
+  border-color: var(--color-border-focus);
+  color: var(--color-text);
+}
+
+.status-select:focus-visible {
+  border-color: var(--color-border-focus);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
 /* ── 13. Empty State ──────────────────────────────────────── */
 .empty-state {
   text-align: center;
