@@ -7,7 +7,7 @@ Add books, track your reading progress, search your collection, and keep everyth
 
 ## Live Demo
 
-> Link will be added after GitHub Pages deployment.
+[Book Tracker — Live Demo](https://dyvinbiju.github.io/book-tracker/)
 
 ---
 
